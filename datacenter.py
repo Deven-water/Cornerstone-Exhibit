@@ -4,6 +4,7 @@ import machine, neopixel
 from machine import ADC
 import math
 #import random
+# test
 
 da = neopixel.NeoPixel(machine.Pin(13), 19)
 en1 = neopixel.NeoPixel(machine.Pin(0), 29)
