@@ -1,9 +1,9 @@
 from machine import Pin
 from utime import sleep
 
-button_happy = Pin(0, Pin.IN, Pin.PULL_UP)
+button_happy = Pin(2, Pin.IN, Pin.PULL_UP)
 button_meh = Pin(1, Pin.IN, Pin.PULL_UP)
-button_sad = Pin(2, Pin.IN, Pin.PULL_UP)
+button_sad = Pin(0, Pin.IN, Pin.PULL_UP)
 
 happy = 0
 meh = 0
@@ -34,4 +34,6 @@ while True:
         sad_pressed = False
         
     print(happy)
+    print(meh)
+    print(sad)
     sleep(.1)
