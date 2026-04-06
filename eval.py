@@ -33,7 +33,7 @@ while True:
     elif button_sad.value() == 1:
         sad_pressed = False
         
-    print(happy)
-    print(meh)
-    print(sad)
+    print(f"Happy: {happy}")
+    print(f"meh: {meh}")
+    print(f"sad: {sad}")
     sleep(.1)
