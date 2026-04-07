@@ -46,24 +46,30 @@ while True:
     village1 = round(convert(ADC(27).read_u16()), 2)
     village2 = round(convert(ADC(26).read_u16()), 2)
     
-    print(village1)
-    #print(village2)
+    # print(village1)
+    print(village2)
     
     #village 1  
     if 1.5 < village1 < 1.65: #wind = 1.6/1.7
         energy += 2
     elif 1.9 < village1 < 2.1: # hydro = 2.0
         energy += 2
-    elif village1 > 3.2: # oil = 3.3
-        energy += 2
+    elif 2.9 < village1 < 3.05: # oil = 3.3
+        energy += 3
         sender.value(1)
     elif 1.7 < village1 < 1.8: # wind + hydro = 1.75
         energy += 5
+    elif 2.1 <= village1 <= 2.2: # coal + wind
+        energy += 5
+        sender.value(1)
+    elif 2.7 <= village1 < 2.9: #coal + hydro
+        energy += 5
+        sender.value(1)
         
     #village 2
     if 1.9 < village2 < 2.1: #solar = 2.0
         energy += 1
-    elif 2.95 < village2 < 3.1: #nuclear = 3.3
+    elif 2.9 < village2 < 3.1: #nuclear = 3.3
         energy += 5
     elif 1.55 < village2 < 1.63: #oil = 1.6
         energy += 3
@@ -76,7 +82,8 @@ while True:
         sender.value(1)
     elif 2.8 < village2 < 2.9: # nuclear + solar = 2.8
         energy = 6
-        
+    
+    print(energy)
     for i in range(5):
         vill_lvl[i] = (0, 0, 0)
         

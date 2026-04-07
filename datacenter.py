@@ -47,19 +47,25 @@ while True:
     data1 = round(convert(ADC(27).read_u16()), 2)
     data2 = round(convert(ADC(26).read_u16()), 2)
     
-    #print(data1)
+    print(data1)
     #print(data2)
     
     #data1 
     if 1.6 < data1 < 1.7: # wind = 1.6/1.7
         energy += 2
-    elif data1 > 3.2: #coal = 3.3
+    elif data1 > 3.15: #coal = 3.3
         energy += 3
         bad = 1
     elif 2.35 < data1 < 2.5: #Hydro = 2.4
        energy += 2
     elif 1.75 < data1 < 1.85:
         energy += 5 #hydro + wind = 1.8
+    elif 2.2 <= data1 < 2.3: # oil + wind
+        energy += 5
+        bad = 1
+    elif 2.95 < data1 <= 3.05: #oil + hydro
+        energy += 5
+        bad = 1
         
     #data2   
     if 2.3 < data2 < 2.5: #solar = 2.4
@@ -81,7 +87,7 @@ while True:
         data_lvl[i] = (125,125, 125)
     data_lvl.write()
     
-    print(energy)
+    #print(energy)
     #displaying dc lights
     if energy > 10:
         for i in range(19):
