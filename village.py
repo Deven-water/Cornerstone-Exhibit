@@ -38,52 +38,56 @@ def convert(value):
     volts = value * (3.3 / 65535)
     return volts
 
+def read_median(adc, samples=11):
+    readings = sorted([adc.read_u16() for _ in range(samples)])
+    return readings[samples // 2]
+
 while True:
     sender.value(0)
     win.value(0)
     energy = 0
     
-    village1 = round(convert(ADC(27).read_u16()), 2)
-    village2 = round(convert(ADC(26).read_u16()), 2)
+    village1 = round(convert(read_median(ADC(27))), 2)
+    village2 = round(convert(read_median(ADC(26))), 2)
     
-    # print(village1)
-    print(village2)
+    print(f"village 1: {village1}")
+    print(f"village 2: {village2}")
     
     #village 1  
-    if 1.5 < village1 < 1.65: #wind = 1.6/1.7
+    if 1.5 < village1 < 1.7: #wind = 1.6/1.7
         energy += 2
-    elif 1.9 < village1 < 2.1: # hydro = 2.0
+    elif 1.85 < village1 < 2.1: # hydro = 2.0
         energy += 2
-    elif 2.9 < village1 < 3.05: # oil = 3.3
+    elif 2.9 < village1 < 3.1: # oil = 3.3
         energy += 3
         sender.value(1)
-    elif 1.7 < village1 < 1.8: # wind + hydro = 1.75
+    elif 1.7 < village1 < 1.85: # wind + hydro = 1.75
         energy += 5
-    elif 2.1 <= village1 <= 2.2: # coal + wind
+    elif 2.1 <= village1 < 2.6: # coal + wind
         energy += 5
         sender.value(1)
-    elif 2.7 <= village1 < 2.9: #coal + hydro
+    elif 2.6 < village1 < 2.9: #coal + hydro
         energy += 5
         sender.value(1)
         
     #village 2
-    if 1.9 < village2 < 2.1: #solar = 2.0
+    if 1.85 < village2 < 2.1: #solar = 2.0
         energy += 1
-    elif 2.9 < village2 < 3.1: #nuclear = 3.3
+    elif 2.95 <= village2 < 3.2: #nuclear = 3.3
         energy += 5
-    elif 1.55 < village2 < 1.63: #oil = 1.6
+    elif 1.5 < village2 < 1.65: #oil = 1.6
         energy += 3
         sender.value(1)
-    elif 1.7 < village2 < 1.8: # oil + solar = 1.8
+    elif 1.65 < village2 < 1.85: # oil + solar = 1.8
         energy += 4
         sender.value(1)
-    elif 2.1 < village2 < 2.2: # nuclear + oil = 2.1
+    elif 2.1 < village2 < 2.4: # nuclear + oil = 2.1
         energy += 8
         sender.value(1)
-    elif 2.8 < village2 < 2.9: # nuclear + solar = 2.8
+    elif 2.5 < village2 < 2.95: # nuclear + solar = 2.8
         energy = 6
     
-    print(energy)
+    print(f"energy: {energy}")
     for i in range(5):
         vill_lvl[i] = (0, 0, 0)
         
@@ -114,6 +118,5 @@ while True:
         vill.write()
     else:
         turn_RGB_off(vill, 29)
-    
     
     sleep(.5)

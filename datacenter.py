@@ -38,17 +38,21 @@ def convert(value):
     volts = value * (3.3 / 65535)
     return volts
 
+def read_median(adc, samples=11):
+    readings = sorted([adc.read_u16() for _ in range(samples)])
+    return readings[samples // 2]
+
 while True:
     bad = recieve.value()
     vill_win = recieve2.value()
     #bad = 0
     energy = 0
     
-    data1 = round(convert(ADC(27).read_u16()), 2)
-    data2 = round(convert(ADC(26).read_u16()), 2)
+    data1 = round(convert(read_median(ADC(27))), 2)
+    data2 = round(convert(read_median(ADC(26))), 2)
     
-    print(data1)
-    #print(data2)
+    print("data 1: {data1}")
+    print("data 2: {data2}")
     
     #data1 
     if 1.6 < data1 < 1.7: # wind = 1.6/1.7
@@ -58,8 +62,8 @@ while True:
         bad = 1
     elif 2.35 < data1 < 2.5: #Hydro = 2.4
        energy += 2
-    elif 1.75 < data1 < 1.85:
-        energy += 5 #hydro + wind = 1.8
+    elif 1.75 < data1 < 1.85: #hydro + wind = 1.8
+        energy += 5 
     elif 2.2 <= data1 < 2.3: # oil + wind
         energy += 5
         bad = 1
@@ -87,7 +91,7 @@ while True:
         data_lvl[i] = (125,125, 125)
     data_lvl.write()
     
-    #print(energy)
+    print(f"energy: {energy}")
     #displaying dc lights
     if energy > 10:
         for i in range(19):
@@ -123,7 +127,7 @@ while True:
         change_green(en1, 29)
         change_green(en2, 29)
     
-    if energy == 10 and not bad and vill_win:
+    if energy == 5 and not bad and vill_win:
         val1 =  random.randint(1,255)
         val2 =  random.randint(1,255)
         val3 =  random.randint(1,255)
